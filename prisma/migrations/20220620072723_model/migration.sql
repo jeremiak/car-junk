@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "Junk" (
+    "id" TEXT NOT NULL,
+    "photo" TEXT NOT NULL,
+    "lat" DOUBLE PRECISION NOT NULL,
+    "lng" DOUBLE PRECISION NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Junk_pkey" PRIMARY KEY ("id")
+);

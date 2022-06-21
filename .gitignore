@@ -1,5 +1,8 @@
-.DS_Store
+build
 node_modules
 tmp
+.DS_Store
+.env
+.netlify
 .svelte-kit
 *.log
