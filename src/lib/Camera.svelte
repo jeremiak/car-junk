@@ -2,7 +2,7 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { writable } from "svelte/store";
 
-  // export let data = null
+  export let initialBlob = null;
 
   let canvas, img, video;
   const facingMode = writable("user");
@@ -32,6 +32,7 @@
 
   function handleClearPhoto() {
     $hasTakenPhoto = false;
+    dispatch("photo", null);
   }
 
   async function handleTakePictureClick(e) {
@@ -42,10 +43,10 @@
     canvas.height = height;
     context.drawImage(video, 0, 0, width, height);
 
-    canvas.toBlob(blob => {
+    canvas.toBlob((blob) => {
       dispatch("photo", blob);
       $hasTakenPhoto = true;
-    })
+    });
   }
 
   async function handleChangeCamera(e) {
@@ -57,6 +58,24 @@
     video.srcObject = stream;
     video.play();
   }
+
+  $: {
+    if (initialBlob) {
+      console.log("hi");
+      const i = new Image();
+
+      i.onload = function () {
+        const context = canvas.getContext("2d");
+        const { width, height } = i;
+        canvas.width = width;
+        canvas.height = height;
+        context.drawImage(i, 0, 0, width, height);
+        $hasTakenPhoto = true;
+      };
+
+      i.src = URL.createObjectURL(initialBlob);
+    }
+  }
 </script>
 
 <div>
@@ -66,10 +85,10 @@
     <div class="controls">
       {#if $supportsCamera}
         {#if $hasTakenPhoto}
-          <button on:click={handleClearPhoto}>Clear</button>
+          <button on:click={handleClearPhoto}>🗑  Clear</button>
         {:else}
-          <button on:click={handleChangeCamera}>Change camera</button>
-          <button on:click={handleTakePictureClick}>Click</button>
+          <button on:click={handleChangeCamera}>📷  Change camera</button>
+          <button on:click={handleTakePictureClick}>💥  Click</button>
         {/if}
       {/if}
     </div>
